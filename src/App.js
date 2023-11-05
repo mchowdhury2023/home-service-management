@@ -4,6 +4,7 @@ import Button from '@mui/material/Button'; // Material-UI button component
 import Navbar from './components/Navbar/Navbar';
 import { Outlet } from 'react-router-dom';
 import Footer from './components/Footer/Footer';
+import { toast } from 'react-toastify';
 
 function App() {
 
