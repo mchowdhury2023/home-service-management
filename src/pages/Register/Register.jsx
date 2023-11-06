@@ -1,64 +1,127 @@
-import React, { useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { TextField, Button, Container, Typography, Avatar, Grid, Paper } from '@mui/material';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { AuthContext } from '../../providers/AuthProvider';
-
+import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  TextField,
+  Button,
+  Container,
+  Typography,
+  Avatar,
+  Grid,
+  Paper,
+} from "@mui/material";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { AuthContext } from "../../providers/AuthProvider";
+import { updateProfile } from "firebase/auth";
 
 const Register = () => {
-  const { createUser, updateUser } = useContext(AuthContext);
+  const [registerError, setRegisterError] = useState("");
+  const [regSuccess, setRegSuccess] = useState("");
+  const { user, createUser, updateUser } = useContext(AuthContext);
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    photoURL: ''
+    name: "",
+    email: "",
+    password: "",
+    photoURL: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({ ...prevState, [name]: value }));
+    setFormData((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    const { name, email, password, photoURL } = formData;
+  const clearFormFields = () => {
+    setFormData({
+      name: "",
+      photoURL: "",
+      email: "",
+      password: "",
+    });
+  };
 
-    // Password validation logic
+  const handleRegister = (e) => {
+    e.preventDefault();
+
+    const { name, photoURL, email, password } = formData;
+
+    setRegisterError("");
+    setRegSuccess("");
+
     if (password.length < 6) {
-      toast.error("Password must be at least 6 characters long");
+      const errorMsg = "Password must be at least 6 characters long";
+      setRegisterError(errorMsg);
+
+      toast.error(errorMsg);
+      clearFormFields();
       return;
     }
 
     if (!/[A-Z]/.test(password)) {
-      toast.error("Password must contain at least one uppercase letter");
+      const errorMsg = "Password must contain at least one uppercase letter";
+      setRegisterError(errorMsg);
+
+      toast.error(errorMsg);
+      clearFormFields();
       return;
     }
 
     if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(password)) {
-      toast.error("Password must contain at least one special character");
+      const errorMsg = "Password must contain at least one special character";
+      setRegisterError(errorMsg);
+
+      toast.error(errorMsg);
+      clearFormFields();
       return;
     }
 
-    try {
-      const result = await createUser(email, password);
-      await updateUser(result.user, {
-        displayName: name,
-        photoURL: photoURL
+    console.log("Form Data:", formData);
+
+    // If validations pass, continue with user creation
+    createUser(email, password)
+      .then((result) => {
+        console.log("Firebase User:", result.user);
+
+        // Use the values provided by the user for the displayName and photoURL
+        return updateProfile(result.user, {
+          displayName: formData.name,
+          photoURL: formData.photoURL,
+        });
+      })
+      .then(() => {
+        updateUser({
+          ...user,
+          displayName: name,
+          photoURL: photoURL,
+        });
+        const successMsg = "User created successfully";
+        setRegSuccess(successMsg);
+        toast.success(successMsg);
+
+        clearFormFields();
+        navigate("/");
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+        setRegisterError(error.message);
+        toast.error(error.message);
       });
-      toast.success('User created successfully');
-      navigate('/');
-    } catch (error) {
-      toast.error(error.message);
-    }
   };
 
   return (
     <Container component="main" maxWidth="xs">
-      <ToastContainer />
-      <Paper elevation={6} sx={{ p: 3, mt: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+      <Paper
+        elevation={6}
+        sx={{
+          p: 3,
+          mt: 8,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
           {/* Icon or image */}
         </Avatar>
         <Typography component="h1" variant="h5">
@@ -125,6 +188,7 @@ const Register = () => {
           </Button>
         </form>
       </Paper>
+      <ToastContainer></ToastContainer>
     </Container>
   );
 };
