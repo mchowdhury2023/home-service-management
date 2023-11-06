@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Grid, Card, CardActionArea, CardContent, CardMedia, Typography, Container } from '@mui/material';
+import { useNavigate } from 'react-router-dom'; // To navigate to AllServices page
+import { Grid, Card, CardActionArea, CardContent, CardMedia, Typography, Container, Button } from '@mui/material';
 
 const ServicesList = () => {
   const [services, setServices] = useState([]);
+  const navigate = useNavigate(); // Hook for navigation
 
   useEffect(() => {
-    // Fetch services from the backend
     const fetchServices = async () => {
       try {
         const response = await axios.get('http://localhost:5000/services');
-        setServices(response.data); // Set the services in state
+        setServices(response.data.slice(0, 4)); // Only take the first 4 services
       } catch (error) {
         console.error('Error fetching services:', error);
       }
@@ -21,13 +22,13 @@ const ServicesList = () => {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-    <Typography variant="h2" component="h2" gutterBottom align="center">
-      Our Services
-    </Typography>
-    <Grid container spacing={4} justifyContent="center">
-      {services.map((service) => (
-        <Grid item key={service._id} xs={12} sm={6} lg={6}>
-          <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <Typography variant="h2" gutterBottom align="center">
+        Our Services
+      </Typography>
+      <Grid container spacing={4} justifyContent="center">
+        {services.map((service) => (
+          <Grid item key={service._id} xs={12} sm={6} lg={6}>
+             <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
             <CardActionArea sx={{ flexGrow: 1 }}>
               <CardMedia
                 component="img"
@@ -49,11 +50,16 @@ const ServicesList = () => {
               </CardContent>
             </CardActionArea>
           </Card>
-        </Grid>
-      ))}
-    </Grid>
-  </Container>
-);
+          </Grid>
+        ))}
+      </Grid>
+      <Grid container justifyContent="center" sx={{ mt: 4 }}>
+        <Button variant="contained" onClick={() => navigate('/allservices')}>
+          All Services
+        </Button>
+      </Grid>
+    </Container>
+  );
 };
 
 export default ServicesList;

@@ -1,6 +1,7 @@
 // Footer.js
 import React from 'react';
-import { Box, Container, Typography, Grid } from '@mui/material';
+import { Box, Container, Typography, Grid, Button } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
@@ -29,6 +30,9 @@ const Footer = () => {
               {/* Here you can include social media icons and links */}
             </Typography>
           </Grid>
+          <Button color="inherit" component={Link} to="/testimonials">
+          Feedback
+        </Button>
         </Grid>
       </Container>
     </Box>
