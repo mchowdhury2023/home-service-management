@@ -28,6 +28,7 @@ const AddService = () => {
         ...formData,
         providerName: user.displayName || 'Anonymous',
         providerImage: user.photoURL || 'NO Image',
+        providerEmail:user.email
       };
       // Your API endpoint here
       const response = await axios.post('http://localhost:5000/addServices', providerData);

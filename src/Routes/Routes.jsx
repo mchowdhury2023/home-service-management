@@ -8,6 +8,9 @@ import TestimonialForm from "../pages/Testimonial/TestimonialForm";
 import AllServices from "../pages/Service/AllServices";
 import ServiceDetails from "../pages/Service/ServiceDetails";
 import Bookings from "../pages/Service/Booking/Bookings";
+import ManageServices from "../pages/Service/ManageServices";
+import EditService from "../pages/Service/EditService/EditService";
+import PageNotFound from "../pages/PageNotFound/PageNotFound";
 
 const router = createBrowserRouter([
     {
@@ -30,7 +33,16 @@ const router = createBrowserRouter([
         },
         {
           path:'/add-service',
-          element:<AddService></AddService>
+          element:<AddService></AddService>,
+        },
+        {
+          path:'/editService/:id',
+          element:<EditService></EditService>,
+          loader:({params}) => fetch(`http://localhost:5000/services/${params.id}`)
+        },
+        {
+          path:'/my-services',
+          element:<ManageServices></ManageServices>
         },
         {
           path:'/testimonials',
@@ -47,7 +59,11 @@ const router = createBrowserRouter([
         {
           path:'/bookings',
           element:<Bookings></Bookings>
-        }
+        },
+        {
+          path: "*",
+          element: <PageNotFound></PageNotFound>,
+        },
 
 
 

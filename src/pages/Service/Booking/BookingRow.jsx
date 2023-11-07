@@ -1,32 +1,43 @@
 
-const BookingRow = ({ booking}) => {
+const BookingRow = ({ booking, handleDelete, handleBookingConfirm}) => {
     const { _id, serviceDate, serviceName, price, serviceImage, status } = booking;
+
+    const handleDropdownChange = (event) => {
+        handleStatusChange(_id, event.target.value);
+    };
+
+
 
     return (
         <tr>
-            <th>
-                <button onClick={() => handleDelete(_id)} className="btn btn-sm btn-circle">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                </button>
-            </th>
-            <td>
-                <div className="avatar">
-                    <div className="rounded w-24 h-24">
-                        {serviceImage && <img src={serviceImage} alt="Avatar Tailwind CSS Component" />}
-                    </div>
+        <th>
+            <label>
+                <input type="checkbox" className="checkbox" />
+            </label>
+        </th>
+        <td>
+            <div className="avatar">
+                <div className="rounded w-24 h-24">
+                    {serviceImage && <img src={serviceImage} alt={serviceName} />}
                 </div>
-            </td>
-            <td>
-                {serviceName}
-            </td>
-            <td>{serviceDate}</td>
-            <td>${price}</td>
-            <th>
-                {
-                    status === 'confirm' ? <span className="font-bold text-primary">Confirmed</span> :
-                        <button onClick={() => handleBookingConfirm(_id)} className="btn btn-ghost btn-xs">Please Confirm</button>}
-            </th>
-        </tr>
+            </div>
+        </td>
+        <td>{serviceName}</td>
+        <td>{serviceDate}</td>
+        <td>${price}</td>
+        <td>
+            <select value={status} onChange={(e) => handleDropdownChange(_id, e.target.value)} className="select select-bordered w-full max-w-xs">
+                <option value="pending">Pending</option>
+                <option value="inProgress">In Progress</option>
+                <option value="completed">Completed</option>
+            </select>
+        </td>
+        <td>
+            <button onClick={() => handleDelete(_id)} className="btn btn-error btn-sm">
+                Delete
+            </button>
+        </td>
+    </tr>
     );
 };
 
