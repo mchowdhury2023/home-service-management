@@ -1,43 +1,47 @@
-import React, { useState } from 'react';
-import { Modal, Box, Typography, TextField, Button } from '@mui/material';
-import axios from 'axios';
+import React, { useContext, useState } from "react";
+import { Modal, Box, Typography, TextField, Button } from "@mui/material";
+import axios from "axios";
+import { AuthContext } from "../../../providers/AuthProvider";
 
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
   width: 400,
-  bgcolor: 'background.paper',
+  bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
 };
 
 const BookingModal = ({ open, onClose, service }) => {
-  const [bookingDate, setBookingDate] = useState('');
-  const [specialInstructions, setSpecialInstructions] = useState('');
+  const { user } = useContext(AuthContext);
+  const [bookingDate, setBookingDate] = useState("");
+  const [specialInstructions, setSpecialInstructions] = useState("");
 
   const handleBooking = async () => {
-    // TODO: Get the user email from context or authentication state
-    const userEmail = 'user@example.com';
 
     const bookingDetails = {
       serviceName: service.serviceName,
       serviceImage: service.serviceImage,
       serviceProviderEmail: service.providerEmail,
-      userEmail: userEmail,
+      userEmail: user.email,
+      userName:user.displayName,
       serviceDate: bookingDate,
       specialInstructions: specialInstructions,
       price: service.servicePrice,
     };
 
     try {
-      const response = await axios.post('http://localhost:5000/bookings', bookingDetails);
+      const response = await axios.post(
+        "http://localhost:5000/bookings",
+        bookingDetails
+      );
       console.log(response.data);
       // Handle success response
       onClose(); // Close the modal
     } catch (error) {
-      console.error('Error booking service:', error);
+      console.error("Error booking service:", error);
       // Handle error response
     }
   };
@@ -53,8 +57,15 @@ const BookingModal = ({ open, onClose, service }) => {
         <Typography id="booking-modal-title" variant="h6" component="h2">
           Book Service
         </Typography>
-        {/* Service Details - Not Editable */}
-        <TextField value={service.serviceName} label="Service Name" variant="outlined" fullWidth margin="dense" disabled />
+
+        <TextField
+          value={service.serviceName}
+          label="Service Name"
+          variant="outlined"
+          fullWidth
+          margin="dense"
+          disabled
+        />
         {/* ...add fields for Service Image and Provider Email similarly... */}
         {/* Editable Fields */}
         <TextField
@@ -72,7 +83,14 @@ const BookingModal = ({ open, onClose, service }) => {
           fullWidth
           margin="dense"
         />
-        <TextField value={service.servicePrice} label="Price" variant="outlined" fullWidth margin="dense" disabled />
+        <TextField
+          value={service.servicePrice}
+          label="Price"
+          variant="outlined"
+          fullWidth
+          margin="dense"
+          disabled
+        />
         <Button onClick={handleBooking} variant="contained" sx={{ mt: 2 }}>
           Purchase this Service
         </Button>

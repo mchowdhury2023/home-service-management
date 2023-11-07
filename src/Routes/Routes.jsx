@@ -7,6 +7,7 @@ import AddService from "../pages/Service/AddService";
 import TestimonialForm from "../pages/Testimonial/TestimonialForm";
 import AllServices from "../pages/Service/AllServices";
 import ServiceDetails from "../pages/Service/ServiceDetails";
+import Bookings from "../pages/Service/Booking/Bookings";
 
 const router = createBrowserRouter([
     {
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
         {
           path:"/services/:id",
           element:<ServiceDetails></ServiceDetails>
+        },
+        {
+          path:'/bookings',
+          element:<Bookings></Bookings>
         }
 
 

@@ -85,7 +85,7 @@ const Navbar = () => {
               <MenuItem
                 onClick={handleClose}
                 component={Link}
-                to="/my-schedule"
+                to="/bookings"
               >
                 My Schedule
               </MenuItem>
