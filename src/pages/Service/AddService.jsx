@@ -2,7 +2,8 @@ import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { TextField, Button, Box, Typography, Container } from '@mui/material';
 import { AuthContext } from '../../providers/AuthProvider';
-import Swal from "sweetalert2";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
 
 const AddService = () => {
   const { user } = useContext(AuthContext);
@@ -31,20 +32,32 @@ const AddService = () => {
         providerImage: user.photoURL || 'NO Image',
         providerEmail:user.email
       };
-      // Your API endpoint here
+      //API endpoint here
       const response = await axios.post('https://home-service-server-seven.vercel.app/addServices', providerData, {withCredentials:true});
       if (response.data.insertedId) {
         setSuccess(true);
-        Swal.fire({
-            title: 'Success!',
-            text: 'Service added Successfully',
-            icon: 'success',
-            confirmButtonText: 'OK'
-          })
+        toast.success('Service added Successfully');
+        setFormData({
+          serviceName: '',
+          serviceImage: '',
+          serviceArea: '',
+          servicePrice: '',
+          serviceDescription: '',
+          serviceProviderInfo: '',
+        });
       }
     } catch (error) {
       // Handle error
       setError(err.message);
+      toast.error(error.message);
+      setFormData({
+        serviceName: '',
+        serviceImage: '',
+        serviceArea: '',
+        servicePrice: '',
+        serviceDescription: '',
+        serviceProviderInfo: '',
+      });
     }
   };
 
@@ -157,7 +170,9 @@ const AddService = () => {
         </Button>
       </Box>
       </Box>
+      <ToastContainer />
     </Container>
+  
   );
 };
 

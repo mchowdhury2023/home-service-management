@@ -25,7 +25,7 @@ const TestimonialForm = () => {
         e.target.reset();
       }
     } catch (error) {
-      console.error('Error submitting feedback:', error);
+      
       Swal.fire({
         title: 'Error!',
         text: 'Something went wrong while submitting your feedback.',

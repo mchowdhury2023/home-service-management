@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { Modal, Box, Typography, TextField, Button } from "@mui/material";
 import axios from "axios";
 import { AuthContext } from "../../../providers/AuthProvider";
+import { ToastContainer, toast } from 'react-toastify';
 
 const style = {
   position: "absolute",
@@ -37,12 +38,18 @@ const BookingModal = ({ open, onClose, service }) => {
         "https://home-service-server-seven.vercel.app/bookings",
         bookingDetails
       );
-      console.log(response.data);
-      // Handle success response
-      onClose(); // Close the modal
+      if (response.data.success) {
+        toast.success("Booking successful!");
+        setBookingDate(""); 
+        setSpecialInstructions(""); 
+        onClose(); // Close the modal
+      } else {
+        
+        toast.error("Booking failed. Please try again later.");
+      }
     } catch (error) {
       console.error("Error booking service:", error);
-      // Handle error response
+      toast.error(`Error booking service: ${error.message}`);
     }
   };
 
@@ -118,6 +125,7 @@ const BookingModal = ({ open, onClose, service }) => {
           Purchase this Service
         </Button>
       </Box>
+      <ToastContainer />
     </Modal>
   );
 };
