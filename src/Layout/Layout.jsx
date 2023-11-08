@@ -9,20 +9,20 @@ const Layout = () => {
   const location = useLocation();
 
   useEffect(() => {
-  const siteName = 'HomeScapeHeroes';
-  // Replace the slash with a pipe or any other separator, if needed, for the root path, avoid adding the separator
-  const pageTitle = location.pathname === '/' ? siteName : `${siteName} | ${location.pathname.substring(1)}`;
-  // Set document title
-  document.title = pageTitle;
-}, [location]);
-  
-  return (
-    <div>
-        <Navbar></Navbar>
-        <Outlet></Outlet>
-        <Footer></Footer>
-    </div>
-  )
-}
+    const siteName = 'HomeScapeHeroes';
+    const pageTitle = location.pathname === '/' ? siteName : `${siteName} | ${location.pathname.substring(1)}`;
+    document.title = pageTitle;
+  }, [location]);
 
-export default Layout
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <Navbar />
+      <main style={{ flex: 1 }}>
+        <Outlet />
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+export default Layout;

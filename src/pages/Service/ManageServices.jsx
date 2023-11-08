@@ -13,8 +13,6 @@ const ManageServices = () => {
   const { user } = useContext(AuthContext);
   const [services, setServices] = useState([]);
 
-  console.log("in manage services");
-  console.log(user);
 
   const url = `https://home-service-server-seven.vercel.app/manageservices?email=${user?.email}`;
 
@@ -46,7 +44,7 @@ const ManageServices = () => {
 
   return (
     <div>
-      <h2>Your services: {services.length}</h2>
+      <h2>services added by {user.displayName}</h2>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
         {services.map((service) => (
           <Card key={service._id} sx={{ maxWidth: 345 }}>
