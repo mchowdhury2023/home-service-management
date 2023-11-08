@@ -34,7 +34,7 @@ const BookingModal = ({ open, onClose, service }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/bookings",
+        "https://home-service-server-seven.vercel.app/bookings",
         bookingDetails
       );
       console.log(response.data);

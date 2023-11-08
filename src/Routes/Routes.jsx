@@ -39,7 +39,7 @@ const router = createBrowserRouter([
         {
           path:'/editService/:id',
           element:<PrivateRoute><ManageServices></ManageServices></PrivateRoute>,
-          loader:({params}) => fetch(`http://localhost:5000/services/${params.id}`)
+          loader:({params}) => fetch(`https://home-service-server-seven.vercel.app/services/${params.id}`)
         },
         {
           path:'/my-services',

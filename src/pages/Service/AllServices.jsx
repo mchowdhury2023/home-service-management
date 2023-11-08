@@ -24,7 +24,7 @@ const AllServices = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/services");
+        const response = await axios.get("https://home-service-server-seven.vercel.app/services");
         setServices(response.data);
         setDisplayServices(response.data.slice(0, 6)); // Load first 10 initially
       } catch (error) {

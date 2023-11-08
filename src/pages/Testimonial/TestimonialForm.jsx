@@ -14,7 +14,7 @@ const TestimonialForm = () => {
     const newFeedback = { name, review };
 
     try {
-      const response = await axios.post('http://localhost:5000/testimonials', newFeedback);
+      const response = await axios.post('https://home-service-server-seven.vercel.app/testimonials', newFeedback);
       if (response.data.insertedId) {
         Swal.fire({
           title: 'Success!',

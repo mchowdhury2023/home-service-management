@@ -32,7 +32,7 @@ const AddService = () => {
         providerEmail:user.email
       };
       // Your API endpoint here
-      const response = await axios.post('http://localhost:5000/addServices', providerData, {withCredentials:true});
+      const response = await axios.post('https://home-service-server-seven.vercel.app/addServices', providerData, {withCredentials:true});
       if (response.data.insertedId) {
         setSuccess(true);
         Swal.fire({

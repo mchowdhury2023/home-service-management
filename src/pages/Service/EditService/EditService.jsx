@@ -31,7 +31,7 @@ const EditService = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`http://localhost:5000/services/${_id}`, formData);
+      const response = await axios.put(`https://home-service-server-seven.vercel.app/services/${_id}`, formData);
       if (response.data.modifiedCount > 0) {
         Swal.fire({
             title: 'Success!',

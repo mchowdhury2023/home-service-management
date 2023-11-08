@@ -10,7 +10,7 @@ const ServicesList = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/services');
+        const response = await axios.get('https://home-service-server-seven.vercel.app/services');
         setServices(response.data.slice(0, 4)); // Only take the first 4 services
       } catch (error) {
         console.error('Error fetching services:', error);
@@ -27,7 +27,7 @@ const ServicesList = () => {
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Typography variant="h2" gutterBottom align="center">
-        Our Services
+        Our Popular Services
       </Typography>
       <Grid container spacing={4} justifyContent="center">
         {services.map((service) => (

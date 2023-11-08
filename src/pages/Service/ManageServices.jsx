@@ -16,7 +16,7 @@ const ManageServices = () => {
   console.log("in manage services");
   console.log(user);
 
-  const url = `http://localhost:5000/manageservices?email=${user?.email}`;
+  const url = `https://home-service-server-seven.vercel.app/manageservices?email=${user?.email}`;
 
   useEffect(() => {
     axios
@@ -28,7 +28,7 @@ const ManageServices = () => {
   const handleDelete = (id) => {
     const proceed = window.confirm("Are you sure you want to delete?");
     if (proceed) {
-        fetch(`http://localhost:5000/services/${id}`, {
+        fetch(`https://home-service-server-seven.vercel.app/services/${id}`, {
             method: 'DELETE'
         })
             .then(res => res.json())

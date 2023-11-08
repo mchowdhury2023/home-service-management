@@ -13,7 +13,7 @@ const Bookings = () => {
     const fetchMyBookings = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/bookings?userEmail=${user?.email}`, {withCredentials:true}
+          `https://home-service-server-seven.vercel.app/bookings?userEmail=${user?.email}`, {withCredentials:true}
         );
         setMyBookings(response.data);
       } catch (error) {
@@ -31,7 +31,7 @@ const Bookings = () => {
     const fetchServicesIProvide = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/bookings?serviceProviderEmail=${user?.email}`, {withCredentials:true}
+          `https://home-service-server-seven.vercel.app/bookings?serviceProviderEmail=${user?.email}`, {withCredentials:true}
         );
         // Filter out my own bookings, if necessary
         const servicesProvided = response.data.filter(
@@ -51,7 +51,7 @@ const Bookings = () => {
   const handleDelete = (id) => {
     const proceed = confirm("Are You sure you want to delete");
     if (proceed) {
-      fetch(`http://localhost:5000/bookings/${id}`, {
+      fetch(`https://home-service-server-seven.vercel.app/bookings/${id}`, {
         method: "DELETE",
       })
         .then((res) => res.json())
@@ -70,7 +70,7 @@ const Bookings = () => {
 
   const handleStatusChange = (bookingId, newStatus) => {
     axios
-      .patch(`http://localhost:5000/bookings/${bookingId}`, {
+      .patch(`https://home-service-server-seven.vercel.app/bookings/${bookingId}`, {
         status: newStatus,
       })
       .then((response) => {
