@@ -20,7 +20,7 @@ const Bookings = () => {
         console.error("Error fetching my bookings:", error);
       }
     };
-  
+
     if (user?.email) {
       fetchMyBookings();
     }
@@ -34,13 +34,15 @@ const Bookings = () => {
           `http://localhost:5000/bookings?serviceProviderEmail=${user?.email}`
         );
         // Filter out my own bookings, if necessary
-        const servicesProvided = response.data.filter(booking => booking.userEmail !== user.email);
+        const servicesProvided = response.data.filter(
+          (booking) => booking.userEmail !== user.email
+        );
         setPendingWorks(servicesProvided);
       } catch (error) {
         console.error("Error fetching services I provide:", error);
       }
     };
-  
+
     if (user?.email) {
       fetchServicesIProvide();
     }
@@ -57,7 +59,9 @@ const Bookings = () => {
           console.log(data);
           if (data.deletedCount > 0) {
             alert("deleted successful");
-            const remaining = myBookings.filter((booking) => booking._id !== id);
+            const remaining = myBookings.filter(
+              (booking) => booking._id !== id
+            );
             setMyBookings(remaining);
           }
         });
@@ -66,7 +70,9 @@ const Bookings = () => {
 
   const handleStatusChange = (bookingId, newStatus) => {
     axios
-      .patch(`http://localhost:5000/bookings/${id}`, { status: newStatus })
+      .patch(`http://localhost:5000/bookings/${bookingId}`, {
+        status: newStatus,
+      })
       .then((response) => {
         // Update both sets of bookings with the new status
         const updateBookings = (bookings) =>
@@ -85,82 +91,82 @@ const Bookings = () => {
       });
   };
 
-  const handleBookingConfirm = (id) => {
-    fetch(`http://localhost:5000/bookings/${id}`, {
-      method: "PATCH",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({ status: "confirm" }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        if (data.modifiedCount > 0) {
-          // update state
-          const remaining = bookings.filter((booking) => booking._id !== id);
-          const updated = bookings.find((booking) => booking._id === id);
-          updated.status = "confirm";
-          const newBookings = [updated, ...remaining];
-          setMyBookings(newBookings);
-        }
-      });
-  };
+  //   const handleBookingConfirm = (id) => {
+  //     fetch(`http://localhost:5000/bookings/${id}`, {
+  //       method: "PATCH",
+  //       headers: {
+  //         "content-type": "application/json",
+  //       },
+  //       body: JSON.stringify({ status: "confirm" }),
+  //     })
+  //       .then((res) => res.json())
+  //       .then((data) => {
+  //         console.log(data);
+  //         if (data.modifiedCount > 0) {
+  //           // update state
+  //           const remaining = bookings.filter((booking) => booking._id !== id);
+  //           const updated = bookings.find((booking) => booking._id === id);
+  //           updated.status = "confirm";
+  //           const newBookings = [updated, ...remaining];
+  //           setMyBookings(newBookings);
+  //         }
+  //       });
+  //   };
 
   return (
     <div>
-        <h2 className="text-5xl mb-4">Bookings Dashboard</h2>
+      <h2 className="text-5xl mb-4">Bookings Dashboard</h2>
 
-        {/* My Bookings Section */}
-        <section>
-            <h3 className="text-3xl mb-2">Your Bookings</h3>
-            {myBookings.length > 0 ? (
-                <div className="overflow-x-auto w-full">
-                    <table className="table w-full">
-                        {/* ... table head ... */}
-                        <tbody>
-                            {myBookings.map((booking) => (
-                                <BookingRow
-                                    key={booking._id}
-                                    booking={booking}
-                                    handleDelete={handleDelete}
-                                    handleBookingConfirm={handleBookingConfirm}
-                                    // Add any other handlers you need for status updates
-                                />
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            ) : (
-                <p className="text-xl text-gray-500">You have no bookings.</p>
-            )}
-        </section>
+      {/* My Bookings Section */}
+      <section>
+        <h3 className="text-3xl mb-2">Your Bookings</h3>
+        {myBookings.length > 0 ? (
+          <div className="overflow-x-auto w-full">
+            <table className="table w-full">
+              {/* ... table head ... */}
+              <tbody>
+                {myBookings.map((booking) => (
+                  <BookingRow
+                    key={booking._id}
+                    booking={booking}
+                    handleDelete={handleDelete}
+                    showStatusChange={false} // don't show status change dropdown
+                    showDelete={true} // show delete option
+                  />
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p className="text-xl text-gray-500">You have no bookings.</p>
+        )}
+      </section>
 
-        {/* My Pending Works Section */}
-        <section className="mt-8">
-            <h3 className="text-3xl mb-2">My Pending Works</h3>
-            {/* Replace pendingWorks with the actual state variable */}
-            {pendingWorks.length > 0 ? (
-                <div className="overflow-x-auto w-full">
-                    <table className="table w-full">
-                        {/* ... table head ... */}
-                        <tbody>
-                            {pendingWorks.map((work) => (
-                                <BookingRow
-                                    key={work._id}
-                                    booking={work}
-                                    handleDelete={handleDelete}
-                                    handleBookingConfirm={handleBookingConfirm}
-                                    // Add any other handlers you need for status updates
-                                />
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            ) : (
-                <p className="text-xl text-gray-500">There are no pending works.</p>
-            )}
-        </section>
+      {/* My Pending Works Section */}
+      <section className="mt-8">
+        <h3 className="text-3xl mb-2">My Pending Works</h3>
+        {/* Replace pendingWorks with the actual state variable */}
+        {pendingWorks.length > 0 ? (
+          <div className="overflow-x-auto w-full">
+            <table className="table w-full">
+              {/* ... table head ... */}
+              <tbody>
+                {pendingWorks.map((work) => (
+                  <BookingRow
+                    key={work._id}
+                    booking={work}
+                    handleStatusChange={handleStatusChange}
+                    showStatusChange={true} // show status change dropdown
+                    showDelete={false} // don't show delete option
+                  />
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p className="text-xl text-gray-500">There are no pending works.</p>
+        )}
+      </section>
     </div>
   );
 };

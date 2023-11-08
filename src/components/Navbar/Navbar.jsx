@@ -13,6 +13,8 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../providers/AuthProvider";
+import logo from '../../assets/homeservice-logo.png'
+
 
 const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
@@ -40,17 +42,8 @@ const Navbar = () => {
   return (
     <AppBar position="static">
       <Toolbar>
-        <IconButton
-          edge="start"
-          color="inherit"
-          aria-label="menu"
-          sx={{ mr: 2 }}
-        >
-          <MenuIcon />
-        </IconButton>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Website Name
-        </Typography>
+       
+      <img src={logo} alt="Home Service Logo" style={{ maxWidth: '120px', marginRight: 'auto' }} />
         <Button color="inherit" component={Link} to="/">
           Home
         </Button>
