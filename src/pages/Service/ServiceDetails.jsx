@@ -18,7 +18,7 @@ const ServiceDetails = () => {
 
     const fetchServiceDetails = async (serviceId) => {
       try {
-        const response = await axios.get(`http://localhost:5000/services/${serviceId}`);
+        const response = await axios.get(`http://localhost:5000/services/${serviceId}`, {withCredentials:true});
         setService(response.data);
       } catch (error) {
         console.error('Error fetching service details:', error);
@@ -39,7 +39,7 @@ const ServiceDetails = () => {
   useEffect(() => {
     const fetchProviderServices = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/manageservices?email=${service.providerEmail}`);
+        const response = await axios.get(`http://localhost:5000/manageservices?email=${service.providerEmail}`, {withCredentials:true});
         setProviderServices(response.data);
       } catch (error) {
         console.error('Error fetching provider services:', error);

@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify";
 import app from '../../Firebase/firebase.config';
+import axios from 'axios';
 
 const Login = () => {
 
@@ -25,7 +26,18 @@ const Login = () => {
 
       await signIn(email, password)
       .then((result) => {
-        navigate(location?.state ? location.state : "/");
+        const loggedInUser = result.user;
+        //navigate(location?.state ? location.state : "/");
+        const user = { email };
+
+        //get access token
+        axios.post('http://localhost:5000/jwt', user, {withCredentials:true})
+            .then(res => {
+                console.log(res.data)
+                if (res.data.success) {
+                    navigate(location?.state ? location?.state : '/')
+                }
+            })
       })
       .catch((error) => {
         //console.log(error.message);
@@ -42,9 +54,18 @@ const Login = () => {
     
       const result = await signInWithPopup(auth, googleProvider)
       .then((result) => {
-        navigate(location?.state ? location.state : "/");
-        const user = result.user;
-        console.log(user);
+        const loggedInUser = result.user;
+        //navigate(location?.state ? location.state : "/");
+        const user = { email };
+
+        //get access token
+        axios.post('http://localhost:5000/jwt', user, {withCredentials:true})
+            .then(res => {
+                console.log(res.data)
+                if (res.data.success) {
+                    navigate(location?.state ? location?.state : '/')
+                }
+            })
       })
       .catch((error) => {
         console.log("error ", error.message);

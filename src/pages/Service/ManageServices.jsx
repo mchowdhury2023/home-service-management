@@ -17,11 +17,10 @@ const ManageServices = () => {
   console.log(user);
 
   const url = `http://localhost:5000/manageservices?email=${user?.email}`;
-  console.log(url)
 
   useEffect(() => {
     axios
-      .get(url)
+      .get(url, {withCredentials:true})
       .then((res) => setServices(res.data))
       .catch((err) => console.error(err));
   }, [url]);

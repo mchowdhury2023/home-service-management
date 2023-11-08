@@ -13,7 +13,7 @@ const Bookings = () => {
     const fetchMyBookings = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/bookings?userEmail=${user?.email}`
+          `http://localhost:5000/bookings?userEmail=${user?.email}`, {withCredentials:true}
         );
         setMyBookings(response.data);
       } catch (error) {
@@ -31,7 +31,7 @@ const Bookings = () => {
     const fetchServicesIProvide = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/bookings?serviceProviderEmail=${user?.email}`
+          `http://localhost:5000/bookings?serviceProviderEmail=${user?.email}`, {withCredentials:true}
         );
         // Filter out my own bookings, if necessary
         const servicesProvided = response.data.filter(
@@ -90,28 +90,6 @@ const Bookings = () => {
         console.error("Error updating booking status:", error);
       });
   };
-
-  //   const handleBookingConfirm = (id) => {
-  //     fetch(`http://localhost:5000/bookings/${id}`, {
-  //       method: "PATCH",
-  //       headers: {
-  //         "content-type": "application/json",
-  //       },
-  //       body: JSON.stringify({ status: "confirm" }),
-  //     })
-  //       .then((res) => res.json())
-  //       .then((data) => {
-  //         console.log(data);
-  //         if (data.modifiedCount > 0) {
-  //           // update state
-  //           const remaining = bookings.filter((booking) => booking._id !== id);
-  //           const updated = bookings.find((booking) => booking._id === id);
-  //           updated.status = "confirm";
-  //           const newBookings = [updated, ...remaining];
-  //           setMyBookings(newBookings);
-  //         }
-  //       });
-  //   };
 
   return (
     <div>
