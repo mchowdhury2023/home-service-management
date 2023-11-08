@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
-import { TextField, Button, Box, Typography } from '@mui/material';
+import { TextField, Button, Box, Typography, Container } from '@mui/material';
 import { AuthContext } from '../../providers/AuthProvider';
 import Swal from "sweetalert2";
 
@@ -49,10 +49,18 @@ const AddService = () => {
   };
 
   return (
-    <Box sx={{ mt: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        Add a New Service
-      </Typography>
+    <Container component="main" maxWidth="sm" sx={{ mt: 8, mb: 8 }}>
+      <Box
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center', // This centers your form horizontally
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          Add a New Service
+        </Typography>
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
         <TextField
           margin="normal"
@@ -63,6 +71,7 @@ const AddService = () => {
           name="serviceName"
           autoFocus
           onChange={handleChange}
+          InputLabelProps={{ shrink: true }}
         />
         <TextField
           margin="normal"
@@ -72,6 +81,7 @@ const AddService = () => {
           label="Service Image URL"
           name="serviceImage"
           onChange={handleChange}
+          InputLabelProps={{ shrink: true }}
         />
         <TextField
           margin="normal"
@@ -81,6 +91,7 @@ const AddService = () => {
           label="Service Area"
           name="serviceArea"
           onChange={handleChange}
+          InputLabelProps={{ shrink: true }}
         />
         <TextField
           margin="normal"
@@ -90,6 +101,7 @@ const AddService = () => {
           label="Service Price"
           name="servicePrice"
           onChange={handleChange}
+          InputLabelProps={{ shrink: true }}
         />
         <TextField
           margin="normal"
@@ -99,8 +111,29 @@ const AddService = () => {
           label="Service Description"
           name="serviceDescription"
           multiline
-          rows={4}
+          rows={2}
           onChange={handleChange}
+          InputLabelProps={{ shrink: true }}
+        />
+         <TextField
+          margin="normal"
+          fullWidth
+          id="providerName"
+          label="Provider Name"
+          name="providerName"
+          value={user.displayName || 'Anonymous'}
+          InputLabelProps={{ shrink: true }}
+          disabled
+        />
+        <TextField
+          margin="normal"
+          fullWidth
+          id="providerEmail"
+          label="Provider Email"
+          name="providerEmail"
+          value={user.email}
+          InputLabelProps={{ shrink: true }}
+          disabled
         />
         <TextField
           margin="normal"
@@ -112,6 +145,7 @@ const AddService = () => {
           multiline
           rows={2}
           onChange={handleChange}
+          InputLabelProps={{ shrink: true }}
         />
         <Button
           type="submit"
@@ -122,7 +156,8 @@ const AddService = () => {
           Add Service
         </Button>
       </Box>
-    </Box>
+      </Box>
+    </Container>
   );
 };
 
