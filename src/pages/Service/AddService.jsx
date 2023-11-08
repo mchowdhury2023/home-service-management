@@ -12,6 +12,7 @@ const AddService = () => {
     serviceArea: '',
     servicePrice: '',
     serviceDescription: '',
+    serviceProviderInfo:'',
   });
 
   const [success, setSuccess] = useState(false);
@@ -34,12 +35,12 @@ const AddService = () => {
       const response = await axios.post('http://localhost:5000/addServices', providerData);
       if (response.data.insertedId) {
         setSuccess(true);
-        // Swal.fire({
-        //     title: 'Success!',
-        //     text: 'Service added Successfully',
-        //     icon: 'success',
-        //     confirmButtonText: 'OK'
-        //   })
+        Swal.fire({
+            title: 'Success!',
+            text: 'Service added Successfully',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          })
       }
     } catch (error) {
       // Handle error
@@ -99,6 +100,17 @@ const AddService = () => {
           name="serviceDescription"
           multiline
           rows={4}
+          onChange={handleChange}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="serviceProviderInfo"
+          label="Tell Us About You"
+          name="serviceProviderInfo"
+          multiline
+          rows={2}
           onChange={handleChange}
         />
         <Button

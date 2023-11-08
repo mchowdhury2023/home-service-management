@@ -57,6 +57,14 @@ const BookingModal = ({ open, onClose, service }) => {
         <Typography id="booking-modal-title" variant="h6" component="h2">
           Book Service
         </Typography>
+        <TextField
+          value={service.serviceImage}
+          label="Service Image"
+          variant="outlined"
+          fullWidth
+          margin="dense"
+          disabled
+        />
 
         <TextField
           value={service.serviceName}
@@ -66,11 +74,10 @@ const BookingModal = ({ open, onClose, service }) => {
           margin="dense"
           disabled
         />
-        {/* ...add fields for Service Image and Provider Email similarly... */}
-        {/* Editable Fields */}
+     
         <TextField
           type="date"
-          label="Service Taking Date"
+          label=""
           value={bookingDate}
           onChange={(e) => setBookingDate(e.target.value)}
           fullWidth
@@ -86,6 +93,22 @@ const BookingModal = ({ open, onClose, service }) => {
         <TextField
           value={service.servicePrice}
           label="Price"
+          variant="outlined"
+          fullWidth
+          margin="dense"
+          disabled
+        />
+        <TextField
+          value={service.providerEmail}
+          label="Provider Email"
+          variant="outlined"
+          fullWidth
+          margin="dense"
+          disabled
+        />
+        <TextField
+          value={user.email}
+          label="User Email"
           variant="outlined"
           fullWidth
           margin="dense"

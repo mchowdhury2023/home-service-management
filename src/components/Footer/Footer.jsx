@@ -11,7 +11,7 @@ const Footer = () => {
       sx={{
         bgcolor: 'grey.600', 
         color: 'white',
-        py: 6
+        py: 2
       }}
     >
       <Container maxWidth="lg">
@@ -20,7 +20,7 @@ const Footer = () => {
             <Box display="flex" alignItems="center">
               <img src={logo} alt="ServiceApp Logo" style={{ height: '70px', marginRight: '10px' }} />
               <Typography variant="h6">
-                HomeScape Heroes Home Service
+                HomeScape Heroes <br/> Home Service
               </Typography>
             </Box>
             {/* Logo and text aligned to left */}

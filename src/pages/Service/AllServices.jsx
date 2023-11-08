@@ -26,7 +26,7 @@ const AllServices = () => {
       try {
         const response = await axios.get("http://localhost:5000/services");
         setServices(response.data);
-        setDisplayServices(response.data.slice(0, 10)); // Load first 10 initially
+        setDisplayServices(response.data.slice(0, 6)); // Load first 10 initially
       } catch (error) {
         console.error("Error fetching services:", error);
       }
@@ -40,7 +40,7 @@ const AllServices = () => {
     const filtered = services.filter((service) =>
       service.serviceName.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    setDisplayServices(filtered.slice(0, loadAll ? filtered.length : 10));
+    setDisplayServices(filtered.slice(0, loadAll ? filtered.length : 6));
   }, [searchTerm, services, loadAll]);
 
   const handleSearchChange = (event) => {
@@ -68,9 +68,24 @@ const AllServices = () => {
           <Button onClick={() => handleReadMore(index)}>Read more</Button>
         </>
       );
+    } else {
+      return (
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          style={{
+            maxHeight: '100px', // Set a max height to contain the text within the card
+            overflow: 'auto', // Allow scroll if the content is too long
+            whiteSpace: 'pre-wrap' // Wrap text to next line
+          }}
+        >
+          {description}
+        </Typography>
+      );
     }
-    return description;
   };
+  
+  
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
@@ -105,7 +120,7 @@ const AllServices = () => {
                   image={service.serviceImage}
                   alt={service.serviceName}
                 />
-                <CardContent sx={{ flex: "1 0 auto" }}>
+                <CardContent sx={{ flex: "1 0 auto", overflow: 'auto' }}>
                   <Typography gutterBottom variant="h5" component="div">
                     {service.serviceName}
                   </Typography>

@@ -22,21 +22,33 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    try {
-      await signIn(email, password);
-      navigate(location?.state?.from?.pathname || '/');
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
+
+      await signIn(email, password)
+      .then((result) => {
+        navigate(location?.state ? location.state : "/");
+      })
+      .catch((error) => {
+        //console.log(error.message);
+        if (error.code === "auth/invalid-login-credentials") {
+          toast.error("Invalid login credentials. Please check your email and password.");
+        } else {
+          toast.error(error.message);
+        }
+      });
+  
+};
 
   const handleSignInWithGoogle = async () => {
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      navigate(location?.state?.from?.pathname || '/');
-    } catch (error) {
-      toast.error(error.message);
-    }
+    
+      const result = await signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        navigate(location?.state ? location.state : "/");
+        const user = result.user;
+        console.log(user);
+      })
+      .catch((error) => {
+        console.log("error ", error.message);
+      });
   };
 
   // Return JSX for login form

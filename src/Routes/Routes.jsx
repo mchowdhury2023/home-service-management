@@ -11,6 +11,7 @@ import Bookings from "../pages/Service/Booking/Bookings";
 import ManageServices from "../pages/Service/ManageServices";
 import EditService from "../pages/Service/EditService/EditService";
 import PageNotFound from "../pages/PageNotFound/PageNotFound";
+import PrivateRoute from "./PrivateRoute";
 
 const router = createBrowserRouter([
     {
@@ -33,16 +34,16 @@ const router = createBrowserRouter([
         },
         {
           path:'/add-service',
-          element:<AddService></AddService>,
+          element:<PrivateRoute><AddService></AddService></PrivateRoute>,
         },
         {
           path:'/editService/:id',
-          element:<EditService></EditService>,
+          element:<PrivateRoute><ManageServices></ManageServices></PrivateRoute>,
           loader:({params}) => fetch(`http://localhost:5000/services/${params.id}`)
         },
         {
           path:'/my-services',
-          element:<ManageServices></ManageServices>
+          element:<PrivateRoute><ManageServices></ManageServices></PrivateRoute>
         },
         {
           path:'/testimonials',
@@ -54,11 +55,11 @@ const router = createBrowserRouter([
         },
         {
           path:"/services/:id",
-          element:<ServiceDetails></ServiceDetails>
+          element:<PrivateRoute><ServiceDetails></ServiceDetails></PrivateRoute>
         },
         {
           path:'/bookings',
-          element:<Bookings></Bookings>
+          element:<PrivateRoute><Bookings></Bookings></PrivateRoute>
         },
         {
           path: "*",
