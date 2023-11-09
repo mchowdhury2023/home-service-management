@@ -1,33 +1,26 @@
 import React, { useContext, useState } from "react";
-import { Modal, Box, Typography, TextField, Button } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Typography } from "@mui/material";
 import axios from "axios";
 import { AuthContext } from "../../../providers/AuthProvider";
-import { ToastContainer, toast } from 'react-toastify';
+import { Snackbar, Alert } from '@mui/material';
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  p: 4,
-};
 
 const BookingModal = ({ open, onClose, service }) => {
   const { user } = useContext(AuthContext);
   const [bookingDate, setBookingDate] = useState("");
   const [specialInstructions, setSpecialInstructions] = useState("");
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
-  const handleBooking = async () => {
+  const handleBooking = async (e) => {
+    e.preventDefault();
 
     const bookingDetails = {
       serviceName: service.serviceName,
       serviceImage: service.serviceImage,
       serviceProviderEmail: service.providerEmail,
       userEmail: user.email,
-      userName:user.displayName,
+      userName: user.displayName,
       serviceDate: bookingDate,
       specialInstructions: specialInstructions,
       price: service.servicePrice,
@@ -38,71 +31,69 @@ const BookingModal = ({ open, onClose, service }) => {
         "https://home-service-server-seven.vercel.app/bookings",
         bookingDetails
       );
-      if (response.data.success) {
-        toast.success("Booking successful!");
+      if (response.data.insertedId) {
+        setSnackbarMessage('Booked successfully!');
+        setOpenSnackbar(true);
         setBookingDate(""); 
         setSpecialInstructions(""); 
         onClose(); // Close the modal
-      } else {
-        
-        toast.error("Booking failed. Please try again later.");
-      }
+      } 
     } catch (error) {
       console.error("Error booking service:", error);
       toast.error(`Error booking service: ${error.message}`);
     }
   };
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
+
 
   return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      aria-labelledby="booking-modal-title"
-      aria-describedby="booking-modal-description"
-    >
-      <Box sx={style}>
-        <Typography id="booking-modal-title" variant="h6" component="h2">
-          Book Service
-        </Typography>
+    <div>
+    <Dialog open={open} onClose={onClose}>
+      <DialogTitle>Book Service</DialogTitle>
+      <DialogContent>
         <TextField
           value={service.serviceImage}
           label="Service Image"
           variant="outlined"
           fullWidth
-          margin="dense"
+          margin="normal"
           disabled
         />
-
         <TextField
           value={service.serviceName}
           label="Service Name"
           variant="outlined"
           fullWidth
-          margin="dense"
+          margin="normal"
           disabled
         />
-     
         <TextField
           type="date"
           label=""
           value={bookingDate}
           onChange={(e) => setBookingDate(e.target.value)}
           fullWidth
-          margin="dense"
+          margin="normal"
+          required
         />
         <TextField
           label="Special Instructions"
           value={specialInstructions}
           onChange={(e) => setSpecialInstructions(e.target.value)}
           fullWidth
-          margin="dense"
+          margin="normal"
         />
         <TextField
           value={service.servicePrice}
           label="Price"
           variant="outlined"
           fullWidth
-          margin="dense"
+          margin="normal"
           disabled
         />
         <TextField
@@ -110,23 +101,40 @@ const BookingModal = ({ open, onClose, service }) => {
           label="Provider Email"
           variant="outlined"
           fullWidth
-          margin="dense"
+          margin="normal"
           disabled
         />
         <TextField
           value={user.email}
-          label="User Email"
+          label="Your Email"
           variant="outlined"
           fullWidth
-          margin="dense"
+          margin="normal"
           disabled
         />
-        <Button onClick={handleBooking} variant="contained" sx={{ mt: 2 }}>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose} color="secondary">
+          Cancel
+        </Button>
+        <Button onClick={handleBooking} variant="contained">
           Purchase this Service
         </Button>
-      </Box>
-      <ToastContainer />
-    </Modal>
+      </DialogActions>
+    
+      
+    </Dialog>
+    <Snackbar 
+        open={openSnackbar} 
+        autoHideDuration={6000} 
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+    </div>
   );
 };
 

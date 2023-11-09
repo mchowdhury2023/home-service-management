@@ -16,9 +16,9 @@ const ServiceDetails = () => {
 
 
 
-    const fetchServiceDetails = async (serviceId) => {
+    const fetchServiceDetails = async (id) => {
       try {
-        const response = await axios.get(`https://home-service-server-seven.vercel.app/services/${serviceId}`, {withCredentials:true});
+        const response = await axios.get(`https://home-service-server-seven.vercel.app/services/${id}`);
         setService(response.data);
       } catch (error) {
         console.error('Error fetching service details:', error);
@@ -168,11 +168,13 @@ const ServiceDetails = () => {
         </Box>
       )}
 
-      <BookingModal
-        open={openModal}
-        onClose={handleCloseModal}
-        service={service}
-      />
+{service && (
+   <BookingModal
+     open={openModal}
+     onClose={handleCloseModal}
+     service={service}
+   />
+)}
     </Container>
   );
 };

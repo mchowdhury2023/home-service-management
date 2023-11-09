@@ -29,7 +29,7 @@ const LoyaltyProgramPage = () => {
     if (user) {
       // Replace URL with your API endpoint to check membership status
       axios
-        .get(`http://localhost:5000/membership/status?email=${user.email}`)
+        .get(`https://home-service-server-seven.vercel.app/membership/status?email=${user.email}`)
         .then((response) => setIsMember(response.data.isMember));
     }
   }, [user]);
@@ -55,7 +55,7 @@ const LoyaltyProgramPage = () => {
   const handleBecomeMember = (plan) => {
     if (user) {
       axios
-        .post("http://localhost:5000/members", {
+        .post("https://home-service-server-seven.vercel.app/members", {
           name: user.displayName,
           email: user.email,
           plan,
