@@ -1,3 +1,4 @@
+import { TableRow, TableCell, Checkbox, Button, Select, MenuItem } from '@mui/material';
 const BookingRow = ({
   booking,
   handleDelete,
@@ -5,56 +6,52 @@ const BookingRow = ({
   showStatusChange,
   showDelete,
 }) => {
-  const { _id, serviceDate, serviceName, price, serviceImage } =
-    booking;
-
-    const status = booking.status || 'pending';
-
-
+  const { _id, serviceDate, serviceName, price, serviceImage, status = 'pending' } = booking;
 
   return (
-    <tr>
-      <th>
-        <label>
-          <input type="checkbox" className="checkbox" />
-        </label>
-      </th>
-      <td>
-        <div className="avatar">
-          <div className="rounded w-24 h-24">
-            {serviceImage && <img src={serviceImage} alt={serviceName} />}
-          </div>
+    <TableRow>
+      <TableCell padding="checkbox">
+        <Checkbox />
+      </TableCell>
+      <TableCell component="th" scope="row">
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          {serviceImage && (
+            <img src={serviceImage} alt={serviceName} style={{ width: '50px', height: '50px', borderRadius: '50%', marginRight: '10px' }} />
+          )}
+          {serviceName}
         </div>
-      </td>
-      <td>{serviceName}</td>
-      <td>{serviceDate}</td>
-      <td>${price}</td>
-      <td>
+      </TableCell>
+      <TableCell>{serviceDate}</TableCell>
+      <TableCell>${price}</TableCell>
+      <TableCell>
         {showStatusChange ? (
-          <select
+          <Select
             value={status}
             onChange={(e) => handleStatusChange(_id, e.target.value)}
-            className="select select-bordered w-full max-w-xs"
+            size="small"
+            style={{ width: '100%' }}
           >
-            <option value="pending">Pending</option>
-            <option value="inProgress">In Progress</option>
-            <option value="completed">Completed</option>
-          </select>
+            <MenuItem value="pending">Pending</MenuItem>
+            <MenuItem value="inProgress">In Progress</MenuItem>
+            <MenuItem value="completed">Completed</MenuItem>
+          </Select>
         ) : (
-          <span>{status}</span> // Just show the status text if dropdown is not needed
+          <span>{status}</span>
         )}
-      </td>
-      <td>
+      </TableCell>
+      <TableCell>
         {showDelete && (
-          <button
+          <Button
             onClick={() => handleDelete(_id)}
-            className="btn btn-error btn-sm"
+            color="error"
+            variant="contained"
+            size="small"
           >
             Delete
-          </button>
+          </Button>
         )}
-      </td>
-    </tr>
+      </TableCell>
+    </TableRow>
   );
 };
 
