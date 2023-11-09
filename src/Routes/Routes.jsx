@@ -12,6 +12,7 @@ import ManageServices from "../pages/Service/ManageServices";
 import EditService from "../pages/Service/EditService/EditService";
 import PageNotFound from "../pages/PageNotFound/PageNotFound";
 import PrivateRoute from "./PrivateRoute";
+import LoyaltyProgramPage from "../LoyaltyProgram/LoyaltyProgramPage";
 
 const router = createBrowserRouter([
     {
@@ -60,6 +61,11 @@ const router = createBrowserRouter([
         {
           path:'/bookings',
           element:<PrivateRoute><Bookings></Bookings></PrivateRoute>
+        },
+        {
+          path:'/membership',
+          element:<PrivateRoute><LoyaltyProgramPage></LoyaltyProgramPage></PrivateRoute>
+
         },
         {
           path: "*",

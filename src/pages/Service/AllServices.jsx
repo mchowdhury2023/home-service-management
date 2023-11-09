@@ -94,7 +94,7 @@ const AllServices = () => {
       </Typography>
       <Box sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
         <TextField
-          label="Search Services"
+          label="Search Service By Name"
           variant="outlined"
           onChange={handleSearchChange}
           value={searchTerm}

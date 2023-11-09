@@ -57,6 +57,9 @@ const Navbar = () => {
       <Button color="inherit" component={Link} to="/allservices">
         Services
       </Button>
+      <Button color="inherit" component={Link} to="/membership">
+        Become A Member
+      </Button>
       {user ? (
         <>
           <Button color="inherit" onClick={handleMenu}>
