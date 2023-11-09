@@ -8,10 +8,13 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { AuthContext } from "../../providers/AuthProvider";
 import { Link} from "react-router-dom";
+import { Snackbar, Alert } from '@mui/material';
 
 const ManageServices = () => {
   const { user } = useContext(AuthContext);
   const [services, setServices] = useState([]);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
 
   const url = `https://home-service-server-seven.vercel.app/manageservices?email=${user?.email}`;
@@ -33,12 +36,24 @@ const ManageServices = () => {
             .then(data => {
                 console.log(data);
                 if (data.deletedCount > 0) {
-                    alert('deleted successful');
+                  setSnackbarMessage('Booking status deleted successfully!');
+                  setOpenSnackbar(true);
                     const remaining = services.filter(service => service._id !== id);
                     setServices(remaining);
                 }
+                else{
+                  setSnackbarMessage('Failed to delete booking.');
+                  setOpenSnackbar(true);
+                }
             })
     }
+  };
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbar(false);
   };
 
 
@@ -78,6 +93,16 @@ const ManageServices = () => {
         </Card>
       ))}
     </div>
+    <Snackbar 
+        open={openSnackbar} 
+        autoHideDuration={6000} 
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
   </div>
   
   );

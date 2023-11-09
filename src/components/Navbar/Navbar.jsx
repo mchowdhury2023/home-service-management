@@ -63,7 +63,7 @@ const Navbar = () => {
       {user ? (
         <>
           <Button color="inherit" onClick={handleMenu}>
-            Dashboard
+            Manage Services
           </Button>
           <Menu
             id="menu-dashboard"

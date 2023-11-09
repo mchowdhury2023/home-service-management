@@ -3,11 +3,15 @@ import BookingRow from "./BookingRow";
 import axios from "axios";
 import { AuthContext } from "../../../providers/AuthProvider";
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { Snackbar, Alert } from '@mui/material';
+
 
 const Bookings = () => {
   const { user } = useContext(AuthContext);
   const [myBookings, setMyBookings] = useState([]);
   const [pendingWorks, setPendingWorks] = useState([]);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   // Fetch my bookings
   useEffect(() => {
@@ -61,11 +65,16 @@ const Bookings = () => {
         .then((data) => {
           console.log(data);
           if (data.deletedCount > 0) {
-            alert("deleted successful");
+            setSnackbarMessage('Booking status deleted successfully!');
+        setOpenSnackbar(true);
             const remaining = myBookings.filter(
               (booking) => booking._id !== id
             );
             setMyBookings(remaining);
+          }
+          else{
+            setSnackbarMessage('Failed to delete booking.');
+            setOpenSnackbar(true);
           }
         });
     }
@@ -91,10 +100,21 @@ const Bookings = () => {
 
         setMyBookings(updateBookings(myBookings));
         setPendingWorks(updateBookings(pendingWorks));
+        setSnackbarMessage('Booking status updated successfully!');
+        setOpenSnackbar(true);
       })
       .catch((error) => {
         console.error("Error updating booking status:", error);
+        setSnackbarMessage('Failed to update booking status.');
+        setOpenSnackbar(true);
       });
+  };
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbar(false);
   };
 
   return (
@@ -171,6 +191,16 @@ const Bookings = () => {
           <p className="text-xl text-gray-500">You have no Pending works.</p>
         )}
       </section>
+      <Snackbar 
+        open={openSnackbar} 
+        autoHideDuration={6000} 
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { TextField, Button, Box, Typography } from '@mui/material';
-import { useLoaderData, useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
+import { Link, useLoaderData, useNavigate } from 'react-router-dom';
+
+import { Snackbar, Alert } from '@mui/material';
 
 const EditService = () => {
   const navigate = useNavigate();
   const service = useLoaderData();
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+
 
   const { _id, serviceName, serviceImage, serviceArea, servicePrice, serviceDescription, providerEmail } = service;
 
@@ -33,16 +37,22 @@ const EditService = () => {
     try {
       const response = await axios.put(`https://home-service-server-seven.vercel.app/services/${_id}`, formData);
       if (response.data.modifiedCount > 0) {
-        Swal.fire({
-            title: 'Success!',
-            text: 'Product updated Successfully',
-            icon: 'success',
-            confirmButtonText: 'OK'
-          })
+        setSnackbarMessage('Service updated successfully!');
+        setOpenSnackbar(true);
+      
+
       }
     } catch (error) {
       console.error(error.message);
     }
+  };
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbar(false);
+    navigate('/my-services');
   };
 
   return (
@@ -119,10 +129,21 @@ const EditService = () => {
         fullWidth
         variant="contained"
         sx={{ mt: 3, mb: 2 }}
+        
       >
         Update Service
       </Button>
     </Box>
+    <Snackbar 
+        open={openSnackbar} 
+        autoHideDuration={6000} 
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
   </Box>
   );
 };

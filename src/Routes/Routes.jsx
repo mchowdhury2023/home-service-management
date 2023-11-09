@@ -39,7 +39,7 @@ const router = createBrowserRouter([
         },
         {
           path:'/editService/:id',
-          element:<PrivateRoute><ManageServices></ManageServices></PrivateRoute>,
+          element:<PrivateRoute><EditService></EditService></PrivateRoute>,
           loader:({params}) => fetch(`https://home-service-server-seven.vercel.app/services/${params.id}`)
         },
         {
