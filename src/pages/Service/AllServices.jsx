@@ -1,4 +1,3 @@
-// AllServices.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
@@ -20,13 +19,17 @@ const AllServices = () => {
   const [displayServices, setDisplayServices] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loadAll, setLoadAll] = useState(false);
+  const [sortOrder, setSortOrder] = useState("asc"); // "asc" for ascending, "desc" for descending
 
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await axios.get("https://home-service-server-seven.vercel.app/services");
-        setServices(response.data);
-        setDisplayServices(response.data.slice(0, 6)); // Load first 10 initially
+        const response = await axios.get("https://home-service-server-seven.vercel.app/sortservices");
+        if (Array.isArray(response.data)) { // Check if the response data is an array
+          setServices(response.data);
+        } else {
+          throw new Error("Data is not an array");
+        }
       } catch (error) {
         console.error("Error fetching services:", error);
       }
@@ -37,21 +40,32 @@ const AllServices = () => {
 
   useEffect(() => {
     // Filter services based on search term
-    const filtered = services.filter((service) =>
-      service.serviceName.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setDisplayServices(filtered.slice(0, loadAll ? filtered.length : 6));
-  }, [searchTerm, services, loadAll]);
+    if (Array.isArray(services)) {
+      // Filter services based on search term
+      const filtered = services.filter((service) =>
+        service.serviceName.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+
+      // Sort services based on sortOrder
+      const sorted = [...filtered].sort((a, b) => 
+        sortOrder === "asc" ? a.servicePrice - b.servicePrice : b.servicePrice - a.servicePrice
+      );
+
+      setDisplayServices(sorted.slice(0, loadAll ? sorted.length : 6));
+    }
+  }, [searchTerm, services, loadAll, sortOrder]);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
     setLoadAll(false); // Reset loadAll when searching
   };
 
+  const toggleSortOrder = () => {
+    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+  };
+
   const handleReadMore = (index) => {
-    // Clone the current state to avoid direct mutation
     let servicesUpdated = [...displayServices];
-    // Set full description for the clicked service
     servicesUpdated[index].fullDescription = true;
     setDisplayServices(servicesUpdated);
   };
@@ -74,9 +88,9 @@ const AllServices = () => {
           variant="body2"
           color="text.secondary"
           style={{
-            maxHeight: '100px', // Set a max height to contain the text within the card
-            overflow: 'auto', // Allow scroll if the content is too long
-            whiteSpace: 'pre-wrap' // Wrap text to next line
+            maxHeight: '100px',
+            overflow: 'auto',
+            whiteSpace: 'pre-wrap'
           }}
         >
           {description}
@@ -84,14 +98,24 @@ const AllServices = () => {
       );
     }
   };
-  
-  
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Typography variant="h2" gutterBottom align="center">
-        All Services
-      </Typography>
+     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4 }}>
+  <Typography variant="h2" gutterBottom>
+    All Services
+  </Typography>
+  
+  <Box>
+    <Typography variant="subtitle1" gutterBottom>
+      Sort by price
+    </Typography>
+    <Button variant="outlined" onClick={toggleSortOrder}>
+      {sortOrder === "asc" ? "High to Low" : "Low to High"}
+    </Button>
+  </Box>
+</Box>
+
       <Box sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
         <TextField
           label="Search Service By Name"
@@ -103,52 +127,48 @@ const AllServices = () => {
       </Box>
       <Grid container spacing={2}>
         {displayServices.map((service, index) => (
-          <Grid item key={service._id} xs={12}>
+          <Grid item key={service._id} xs={12} md={6} lg={4}>
             <Card
               sx={{
                 display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                mb: 2,
-                position: "relative",
+                flexDirection: "column",
+                height: "100%",
+                justifyContent: "space-between"
               }}
             >
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                <CardMedia
-                  component="img"
-                  sx={{ width: 160, height: 160, objectFit: "cover" }}
-                  image={service.serviceImage}
-                  alt={service.serviceName}
-                />
-                <CardContent sx={{ flex: "1 0 auto", overflow: 'auto' }}>
-                  <Typography gutterBottom variant="h5" component="div">
-                    {service.serviceName}
+              <CardMedia
+                component="img"
+                sx={{ width: "100%", height: 160, objectFit: "cover" }}
+                image={service.serviceImage}
+                alt={service.serviceName}
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  {service.serviceName}
+                </Typography>
+                {renderDescription(service.serviceDescription, index)}
+                <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
+                  <CardMedia
+                    component="img"
+                    image={service.providerImage}
+                    alt={service.providerName}
+                    sx={{ width: 50, height: 50, borderRadius: "50%", mr: 2 }}
+                  />
+                  <Typography variant="subtitle1">
+                    {service.providerName}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {renderDescription(service.serviceDescription, index)}
-                  </Typography>
-                  <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
-                    <CardMedia
-                      component="img"
-                      image={service.providerImage}
-                      alt={service.providerName}
-                      sx={{ width: 50, height: 50, borderRadius: "50%", mr: 2 }}
-                    />
-                    <Typography variant="subtitle1">
-                      {service.providerName}
-                    </Typography>
-                  </Box>
-                  <Typography variant="body1" sx={{ mt: 2 }}>
-                    Area: {service.serviceArea}
-                  </Typography>
-                  <Typography variant="body1">
-                    Price: ${service.servicePrice}
-                  </Typography>
-                </CardContent>
-              </Box>
-              <CardActions sx={{ position: "absolute", bottom: 8, right: 16 }}>
+                </Box>
+                <Typography variant="body1" sx={{ mt: 2 }}>
+                  Area: {service.serviceArea}
+                </Typography>
+                <Typography variant="body1">
+                  Price: ${service.servicePrice}
+                </Typography>
+              </CardContent>
+              <CardActions>
                 <Button
                   variant="contained"
+                  fullWidth
                   component={Link}
                   to={`/services/${service._id}`}
                 >
